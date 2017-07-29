@@ -1,6 +1,4 @@
-var Promise = require('bluebird'),
-    errors = require('../../lib/errors'),
-    utils = require('../../lib/utils');
+var Promise = require('bluebird');
 
 
 
