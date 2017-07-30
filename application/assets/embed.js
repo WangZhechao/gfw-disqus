@@ -10,7 +10,7 @@ function loadScript(url, cb) {
     //设置超时时间
     handle = setTimeout(function() {
     	return callback && callback('timeout');
-    }, 2000);
+    }, 3000);
 
 
 	//回调
@@ -77,11 +77,11 @@ function loadDisqus() {
 //测试加载文件
 loadScript('https://test-apkdzgmqhj.disqus.com/embed.js', function(err) {
 	//如果不正常，生产iframe框架
-	if(err) {
+	//if(err) {
 		loadGFWDisqus();
-	} else {
-		loadDisqus();
-	}
+	//} else {
+	//	loadDisqus();
+	//}
 });
 
 
