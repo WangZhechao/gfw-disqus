@@ -22,7 +22,7 @@ module.exports = {
 
 
 	disqus: {
-		forum_id: 'wangzhechao',
+		forum_id: 'fooleap',
 		auth_website: 'http://wangzhechao.com',
 		api_key: 'E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F',
 
@@ -35,6 +35,9 @@ module.exports = {
 			'threads_listPosts': 'threads/listPosts'
 		}
 	},
+
+	gravatar_cdn: '//cn.gravatar.com/avatar',
+	emoji_path: 'https://assets-cdn.github.com/images/icons/emoji/unicode',
 
 	logging: true
 };
