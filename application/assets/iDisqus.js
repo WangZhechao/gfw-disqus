@@ -422,58 +422,58 @@
     //     }
     // }
 
-    // 评论计数
-    iDisqus.prototype.count = function (){
-        var _ = this;
-        var counts = d.querySelectorAll('[data-disqus-url]');
-        var qty = counts.length;
-        if(qty > 0){
-            var commentArr = [];
-            for( var i = 0; i < qty; i++){
-                commentArr[i] = counts[i].dataset.disqusUrl.replace(_.opts.site, '');
-            }
-            getAjax(
-                _.opts.api + '/count.php?links=' + commentArr.join(','), 
-                function(resp) {
-                    var data  = JSON.parse(resp);
-                    var posts = data.response;
-                    posts.forEach(function(item){
-                        var link = item.link.replace(_.opts.site, '');
-                        var itemLink = link.slice(0, 1) != '/' ? '/' + link : link;
-                        var el = d.querySelector('[data-disqus-url$="'+itemLink+'"]')
-                        if(!!el ){
-                            el.innerHTML = item.posts;
-                        }
-                    });
-                }, function(){
-                    alert('获取数据失败！')
-                }
-            );
-        }
-    };
+    // // 评论计数
+    // iDisqus.prototype.count = function (){
+    //     var _ = this;
+    //     var counts = d.querySelectorAll('[data-disqus-url]');
+    //     var qty = counts.length;
+    //     if(qty > 0){
+    //         var commentArr = [];
+    //         for( var i = 0; i < qty; i++){
+    //             commentArr[i] = counts[i].dataset.disqusUrl.replace(_.opts.site, '');
+    //         }
+    //         getAjax(
+    //             _.opts.api + '/count.php?links=' + commentArr.join(','), 
+    //             function(resp) {
+    //                 var data  = JSON.parse(resp);
+    //                 var posts = data.response;
+    //                 posts.forEach(function(item){
+    //                     var link = item.link.replace(_.opts.site, '');
+    //                     var itemLink = link.slice(0, 1) != '/' ? '/' + link : link;
+    //                     var el = d.querySelector('[data-disqus-url$="'+itemLink+'"]')
+    //                     if(!!el ){
+    //                         el.innerHTML = item.posts;
+    //                     }
+    //                 });
+    //             }, function(){
+    //                 alert('获取数据失败！')
+    //             }
+    //         );
+    //     }
+    // };
 
     // 热门评论
-    iDisqus.prototype.popular = function(){
-        var _ = this;
-        if(!!_.opts.popular){
-            getAjax(
-                _.opts.api + '/popular.php', 
-                function(resp) {
-                    var data = JSON.parse(resp);
-                    if(data.code == 0){
-                        var posts = data.response;
-                        var postsHtml = '';
-                        posts.forEach(function(item){
-                            postsHtml += '<li><a href="' + item.link.replace(_.opts.site, '') + '" title="' + item.title + '">' + item.title + '</a></li>';
-                        });
-                        _.opts.popular.innerHTML = postsHtml;
-                    }
-                },function(){
-                    alert('获取数据失败！')
-                }
-            );
-        }
-    }
+    // iDisqus.prototype.popular = function(){
+    //     var _ = this;
+    //     if(!!_.opts.popular){
+    //         getAjax(
+    //             _.opts.api + '/popular.php', 
+    //             function(resp) {
+    //                 var data = JSON.parse(resp);
+    //                 if(data.code == 0){
+    //                     var posts = data.response;
+    //                     var postsHtml = '';
+    //                     posts.forEach(function(item){
+    //                         postsHtml += '<li><a href="' + item.link.replace(_.opts.site, '') + '" title="' + item.title + '">' + item.title + '</a></li>';
+    //                     });
+    //                     _.opts.popular.innerHTML = postsHtml;
+    //                 }
+    //             },function(){
+    //                 alert('获取数据失败！')
+    //             }
+    //         );
+    //     }
+    // }
 
 
     // 获取评论列表
@@ -937,17 +937,17 @@
 
         // POST 操作
         var postData = {
-            thread:  _.stat.thread,
+            thread:  _.stat.threadID,
             parent: parentId,
             message: message,
             name: _.guest.name,
             email: _.guest.email,
             url:  _.guest.url,
-            link: _.opts.url,
+            link: _.opts.link,
             title: _.opts.title
         }
 
-        postAjax( _.opts.api + '/postcomment.php', postData, function(resp){
+        postAjax( _.opts.api + '/comment', postData, function(resp){
             var data = JSON.parse(resp);
             if (data.code === 0) {
                 var preview = _.dom.querySelector('.comment-item[data-id="preview"]');

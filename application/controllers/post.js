@@ -7,11 +7,6 @@ var Promise = require('bluebird'),
 	utils = require('../../lib/utils');
 
 
-var getDisqusURL = function(path) {
-	return config.disqus.api_url + '/' + config.disqus.api_ver + '/' 
-		+ config.disqus.resources[path] + '.' + config.disqus.output_type;
-}
-
 
 var formatPost = function(post, author) {
 
@@ -88,7 +83,7 @@ module.exports = {
 
 
 		return rp({
-			uri: getDisqusURL('threads_details'),
+			uri: utils.getDisqusURL('threads_details'),
 			qs: _.assign(qs, tqs),
 
 			json: true			
@@ -97,7 +92,7 @@ module.exports = {
 			return Promise.resolve(_.pick(res.response, ['likes', 'isClosed', 'slug', 'id']));
 	    }).then(function(thread) {
 	    	return rp({
-	    		uri: getDisqusURL('threads_listPosts'),
+	    		uri: utils.getDisqusURL('threads_listPosts'),
 	    		qs: _.assign(qs, page, {thread: thread.id}),
 
 	    		json: true
