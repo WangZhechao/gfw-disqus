@@ -3,7 +3,8 @@ var Promise = require('bluebird'),
 	crypto = require('crypto'),
 	rp = require('request-promise'),
 	errors = require('../../lib/errors'),
-	config = require('../../lib/config');
+	config = require('../../lib/config'),
+	utils = require('../../lib/utils');
 
 
 var getDisqusURL = function(path) {
@@ -11,10 +12,6 @@ var getDisqusURL = function(path) {
 		+ config.disqus.resources[path] + '.' + config.disqus.output_type;
 }
 
-
-var md5 = function(str) {
-	return crypto.createHash('md5').update(str).digest('hex');
-}
 
 var formatPost = function(post, author) {
 
@@ -25,7 +22,7 @@ var formatPost = function(post, author) {
 	//头像
 	if(obj.isAnonymous) {
 		if(obj.email)
-			obj.avatar = config.gravatar_cdn + '/' + md5(obj.email) + '?d=' + defAvatar;
+			obj.avatar = config.gravatar_cdn + '/' + utils.md5(obj.email) + '?d=' + defAvatar;
 		else
 			obj.avatar = defAvatar;
 	} else {

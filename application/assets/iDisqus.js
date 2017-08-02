@@ -684,14 +684,28 @@
         var alertmsg = box.querySelector('.comment-form-alert');
         if (/^([\w-_]+(?:\.[\w-_]+)*)@((?:[a-z0-9]+(?:-[a-zA-Z0-9]+)*)+\.[a-z]{2,6})$/i.test(email.value)) {
             getAjax(
-                _.opts.api + '/getgravatar.php?email=' + email.value,
-                function(resp) {
-                    if (resp == 'false') {
-                        _.errorTips('您所填写的邮箱地址有误。', email);
-                    } else {
-                        avatar.src = resp;
+                _.opts.api + '/gravatar?email=' + email.value,
+                function(err, resp) {
+                    if(err) {
+                        return;
                     }
-                }, function(){
+
+                    var data = null;
+                    try {
+                        data = JSON.parse(resp);
+                    } catch(e) {
+                        data = null;
+                    }
+
+                    if(!data) {
+                        return;
+                    }
+
+                    if (!data.success) {
+                        _.errorTips(data.errors[0].message, email);
+                    } else {
+                        avatar.src = data.gravatar;
+                    }
                 }
             );
         }
