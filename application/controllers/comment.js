@@ -29,8 +29,8 @@ module.exports = {
 		    parent: params.parent || null,
 		    message: params.message,
 
-		    author_name: params.name,
-		    author_email: params.email,
+		    author_name: params.name.trim(),
+		    author_email: params.email.trim(),
 		    author_url: params.url || null,
 		};
 
@@ -55,6 +55,13 @@ module.exports = {
 
 
 		return utils.validate(valids)().then(function() {
+
+			if(body.author_email.trim() == config.disqus.admin_email.trim()
+				 || body.author_name.trim() == config.disqus.admin_name.trim()) {
+				return errors.logAndRejectError('伪装管理员，已拉黑……');
+			}
+
+
 			var options = {
 			    method: 'POST',
 			    uri: utils.getDisqusURL('posts_create'),
