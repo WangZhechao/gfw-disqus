@@ -1,66 +1,15 @@
 var Promise = require('bluebird'),
 	_ = require('lodash'),
-	crypto = require('crypto'),
 	rp = require('request-promise'),
 	errors = require('../../lib/errors'),
 	config = require('../../lib/config'),
-	utils = require('../../lib/utils');
-
-
-
-var formatPost = function(post, author) {
-
-	var obj = _.assign(post, author);
-
-	var defAvatar = config.server.url + '/images/noavatar92.png';
-
-	//头像
-	if(obj.isAnonymous) {
-		if(obj.email)
-			obj.avatar = config.gravatar_cdn + '/' + utils.md5(obj.email) + '?d=' + defAvatar;
-		else
-			obj.avatar = defAvatar;
-	} else {
-		obj.avatar = obj.avatar.cache;
-	}
-
-
-	if(!obj.message)
-		obj.message = '';
-
-	//表情
-
-
-	//去除连接重定向
-	// var urlPat = '/<a.*?href="(.*?disq\.us.*?)".*?>(.*?)<\/a>/ig';
-	// obj.message = obj.message.replace(urlPat, function(a) {
-
-	// });
-
-
-	//去掉图片
-	var imgpat = /<a(.*?)href="(.*?\.(jpg|gif|png))"(.*?)>(.*?)<\/a>/ig;
-    obj.message = obj.message.replace(imgpat, '');
-
-    var imgs = [];
-    for(var i=0,len=obj.media.length; i<len; i++) {
-    	imgs.push(obj.media[i].url);
-    }
-    obj.media = imgs;
-
-	return obj;
-}
+	utils = require('../../lib/utils'),
+	common = require('../common');
 
 
 module.exports = {
 
 	list: function(params) {
-
-		var qs = {
-		    api_key: config.disqus.api_key,
-		    forum: config.disqus.forum_id
-		};
-
 
 		var page = {
 			limit: 50,
@@ -84,31 +33,29 @@ module.exports = {
 
 		return rp({
 			uri: utils.getDisqusURL('threads_details'),
-			qs: _.assign(qs, tqs),
+			qs: _.assign({
+				api_key: config.disqus.api_key,
+				forum: config.disqus.forum_id
+			}, tqs),
 
 			json: true			
 		}).then(function (res) {
-			console.log(res);
 			return Promise.resolve(_.pick(res.response, ['likes', 'isClosed', 'slug', 'id']));
 	    }).then(function(thread) {
 	    	return rp({
 	    		uri: utils.getDisqusURL('threads_listPosts'),
-	    		qs: _.assign(qs, page, {thread: thread.id}),
+	    		qs: _.assign({
+	    			access_token: config.disqus.access_token,
+	    			api_secret : config.disqus.api_secret,
+	    			forum: config.disqus.forum_id
+	    		}, page, {thread: thread.id}),
 
 	    		json: true
 	    	}).then(function(res) {
 	    		thread.postTotal = thread.posts;
 	    		thread.posts = [];
-	    		_.forEach(res.response, function(obj) {
-	    		  	var post = _.pick(obj, ['dislikes', 'likes', 'message', 'createdAt', 'id', 'media', 'parent']);
-	    			var author = _.pick(obj.author, ['isAnonymous', 'name', 'url', 'email', 'avatar']);
-// if(author.email) {
-// 	console.log('===========================');
-// 	console.log(res.response);
-// 	console.log('===========================');	
-// }
-
-	    			thread.posts.push(formatPost(post, author));
+	    		_.forEach(res.response, function(post) {
+	    			thread.posts.push(common.formatPost(post));
 	    		});
 
 	    		thread.cursor = res.cursor || {more: false};
