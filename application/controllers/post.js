@@ -40,7 +40,7 @@ module.exports = {
 
 			json: true			
 		}).then(function (res) {
-			return Promise.resolve(_.pick(res.response, ['likes', 'isClosed', 'slug', 'id']));
+			return Promise.resolve(_.pick(res.response, ['likes', 'isClosed', 'slug', 'id', 'posts']));
 	    }).then(function(thread) {
 	    	return rp({
 	    		uri: utils.getDisqusURL('threads_listPosts'),
@@ -53,6 +53,7 @@ module.exports = {
 	    		json: true
 	    	}).then(function(res) {
 	    		thread.postTotal = thread.posts;
+
 	    		thread.posts = [];
 	    		_.forEach(res.response, function(post) {
 	    			thread.posts.push(common.formatPost(post));

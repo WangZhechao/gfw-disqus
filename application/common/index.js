@@ -9,22 +9,24 @@ var Promise = require('bluebird'),
 
 function formatPost(post) {
 
-	var info, author, email, obj, defAvatar;
+	var email, obj, defAvatar;
 
-  	info = _.pick(post, ['dislikes', 'likes', 'message', 'createdAt', 'id', 'media', 'parent']);
-	author = _.pick(post.author, ['isAnonymous', 'name', 'url', 'avatar']);
-	obj = _.assign(post, author);
+  	obj = _.pick(post, ['dislikes', 'likes', 'message', 'createdAt', 
+  		'id', 'media', 'parent', 'author.isAnonymous', 'author.name',
+  		'author.url', 'author.avatar']);
+	
 	email = _.get(post, 'author.email', null);
+
 	defAvatar = config.server.url + '/images/noavatar92.png';
 
 	//头像
 	if(obj.isAnonymous) {
 		if(email)
-			obj.avatar = config.gravatar_cdn + '/' + utils.md5(email) + '?d=' + defAvatar;
+			obj.author.avatar = config.gravatar_cdn + '/' + utils.md5(email) + '?d=' + defAvatar;
 		else
-			obj.avatar = defAvatar;
+			obj.author.avatar = defAvatar;
 	} else {
-		obj.avatar = obj.avatar.cache;
+		obj.author.avatar = post.author.avatar.cache;
 	}
 
 

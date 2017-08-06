@@ -71,11 +71,18 @@
 
 </div>
 
-
+<script type="text/javascript">
+    window.changeHeight = function(){ 
+        var height = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+        window.parent.postMessage(Math.max(300, height), '*');
+    }
+</script>
 <script type="text/javascript" src="./iDisqus.js"></script>
 <script type="text/javascript">
 	var disq = new iDisqus();
 </script>
+
+
 
 </body>
 </html>

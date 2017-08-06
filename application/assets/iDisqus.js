@@ -11,6 +11,24 @@
     var d = document,
         l = localStorage;
 
+    if (typeof Object.create !== "function") {
+        Object.create = function (proto, propertiesObject) {
+            if (!(proto === null || typeof proto === "object" || typeof proto === "function")) {
+                throw TypeError('Argument must be an object, or null');
+            }
+            var temp = new Object();
+            temp.__proto__ = proto;
+            if(typeof propertiesObject ==="object")
+                Object.defineProperties(temp,propertiesObject);
+            return temp;
+        };
+    }
+
+if (!document.addEventListener) {
+    // IE6~IE8
+    document.write('<script src="ieBetter.js"><\/script>'); 
+}
+
     function getLocation(href) {
         var link = d.createElement('a');
         link.href = href;
@@ -235,6 +253,9 @@
         // 配置
         _.opts = {};
         _.dom = d.getElementById('gfw-comment');
+        if(!_.dom.getElementsByClassName) {
+            _.dom.getElementsByClassName = document.getElementsByClassName;
+        }
         _.opts.api = '';
         _.opts.ident = d.getElementById('disqus-ident').innerHTML || '';
         _.opts.link = d.getElementById('disqus-link').innerHTML || '';

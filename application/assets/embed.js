@@ -47,19 +47,24 @@ function loadScript(url, cb) {
 
 //加载自定义文件
 function loadGFWDisqus() {
+
+    window.addEventListener('message', function(event){
+        console.log(event);
+    }, false);
+
+
 	var gfwDisqus = document.createElement("iframe");  
 	gfwDisqus.src ="http://127.0.0.1:3000/comments";
 	gfwDisqus.allowtransparency = "true";
 	gfwDisqus.frameBorder = "0";
 	gfwDisqus.width = "100%";
-	gfwDisqus.height = "300px";  
 	gfwDisqus.scrolling = "no";
 	gfwDisqus.tabindex = "0";
-	gfwDisqus.style ="width: 1px !important; min-width: 100% !important; border: none !important; overflow: hidden !important; height: 300px !important; background: red;"
+	gfwDisqus.style ="width: 1px !important; min-width: 100% !important; border: none !important; overflow: hidden !important;  background: red;"
 	gfwDisqus.horizontalscrolling = "no";
 	gfwDisqus.verticalscrolling = "no"
 
-	document.getElementById("disqus_thread").appendChild(gfwDisqus); 
+	document.getElementById("disqus_thread").appendChild(gfwDisqus);
 }
 
 
@@ -67,22 +72,22 @@ function loadGFWDisqus() {
 function loadDisqus() {
 	(function() {
 	    var d = document, s = d.createElement('script');
-	    s.src = 'https://test-apkdzgmqhj.disqus.com/embed.js';
+	    s.src = 'https://wangzhechao.disqus.com/embed.js';
 	    s.setAttribute('data-timestamp', +new Date());
 	    (d.head || d.body).appendChild(s);
 	})();
 }
 
+loadGFWDisqus();
+
 
 //测试加载文件
-loadScript('https://test-apkdzgmqhj.disqus.com/embed.js', function(err) {
-	//如果不正常，生产iframe框架
-	//if(err) {
-		loadGFWDisqus();
-	//} else {
-	//	loadDisqus();
-	//}
-});
+// loadScript('https://wangzhechao.disqus.com/embed.js', function(err) {
+// 	//如果不正常，生产iframe框架
+// 	if(err) {
+// 		loadGFWDisqus();
+// 	}
+// });
 
 
 
