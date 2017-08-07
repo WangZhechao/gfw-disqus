@@ -1,6 +1,7 @@
 (function (window) {
     'use strict';
 
+
     if (!Object.keys) Object.keys = function(o) {
       if (o !== Object(o))
         throw new TypeError('Object.keys called on a non-object');
@@ -54,9 +55,12 @@
 
 
     var AVATAR_SIZE = 48;
-    var SPACE_SIZE = 10;
+    var SPACE_SIZE = 12;
 
     var UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3;
+
+
+    var _dom = document.getElementById('container');
 
     /*
      * 楼，对应disqus内部Thread
@@ -77,13 +81,21 @@
     	this.postMap = {}; //保存数据，确认只有一次，并且迅速定位
 
 
-    	this.padding = [20, 10, 20, 10]; //上右下左
+    	this.padding = [20, 10, 20, 0]; //上右下左
     	this.elementId = elementId;
     	this.stage = acgraph.create(elementId);
+        
+        var self = this;
+        this.stage.listen("stageresize", function(){
+            self.changeSize({
+                width: self.stage.width(), 
+                height: self.stage.height()
+            });
+        });
     };
 
     //加载信息
-    Thread.prototype.load = function(opts) {
+    Thread.prototype.load = function(opts, cb) {
 
     	var self = this,
     		url = '/listPosts?' 
@@ -97,7 +109,8 @@
     		success: function(resp) {
     			if(!(resp.success && resp.thread)) {
     				console.log(resp.errors[0].message);
-    				return;
+                    return;
+    				//return cb && cb()
     			}
 
     			self.id = resp.thread.id;
@@ -108,11 +121,13 @@
     			self.cursor = resp.thread.cursor;
 
     			self.addChildren(resp.thread.posts);
-    			self.render();
+
+                return cb && cb(null, self);
     		},
 
     		error: function(err) {
     			console.log('err', err);
+                return cb && cb(err);
     		}
     	});
     };
@@ -236,12 +251,10 @@
     };
 
 
-
     //渲染信息
     Thread.prototype.render = function() {
     	var i, len, post, x, y, self = this,
-    		sortFlag = self.flagArray.sort().reverse(),
-    		element;
+    		sortFlag = self.flagArray.sort().reverse();
 
     	if(!self.stage) {
     		return;
@@ -263,17 +276,98 @@
 
     	self.stage.resume();
 
-    	//设定高度
-    	element = document.getElementById(self.elementId);
-    	if(element) {
-    		element.style.height = (y + self.padding[DOWN]) + 'px';
-    	}
+        return {
+            width: (self.stage.width() - self.padding[LEFT] - self.padding[RIGHT]),
+            height: (y + self.padding[DOWN])
+        };
     };
 
-    var thread = new Thread('container');
-    thread.load({
-    	ident: 'ghost-5971becb4ab6c014a0b1f7c6'
-    });
-//    thread.render();
-//console.log(thread.stage.width());
+
+    Thread.prototype.changeSize = function(size) {
+        console.log(size);
+        if(size.width <= 0 || size.height <= 0) 
+            return;
+
+        //设定评论列表高度
+        var commentList = document.getElementById(this.elementId);
+        if(commentList) {
+            commentList.style.height = size.height + 'px';
+          //  commentList.style.width = size.width + 'px';
+        }
+
+
+        //评论框的宽度
+        var commentForm = _dom.querySelector('.comment-form');
+        if(commentForm) {
+            commentForm.style.width = (size.width /*- AVATAR_SIZE - SPACE_SIZE*/) + 'px';
+        }
+    }
+
+    function loadCSS(url) {
+        var link = document.createElement("link");
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = url;
+        document.getElementsByTagName("head")[0].appendChild(link);
+    }
+
+
+    function loadHTML() {
+        if(!_dom) {
+            return;
+        }
+
+        _dom.innerHTML = '<div class="comment-box">' + 
+            // '<div class="comment-avatar avatar">' + 
+            //     '<img class="comment-avatar-image" src="./images/noavatar92.png">' + 
+            // '</div>' + 
+            '<div class="comment-form">' + 
+                '<div class="comment-form-wrapper">' + 
+                    '<textarea class="comment-form-textarea" placeholder="加入讨论……"></textarea>' + 
+                '</div>' + 
+
+                '<div class="comment-login">' + 
+                    '<input class="comment-form-input comment-form-name" type="text" placeholder="名字（必填）" autocomplete="name">' + 
+                    '<input class="comment-form-input comment-form-email" type="email" placeholder="邮箱（必填）" autocomplete="email">' + 
+                    '<input class="comment-form-input comment-form-url" type="url" placeholder="网址（可选）" autocomplete="url">' + 
+                '</div>' + 
+
+                '<div class="comment-actions-form">' + 
+                    '<button class="comment-form-submit">' + 
+                        '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200">' + 
+                            '<path d="M565.747623 792.837176l260.819261 112.921839 126.910435-845.424882L66.087673 581.973678l232.843092 109.933785 562.612725-511.653099-451.697589 563.616588-5.996574 239.832274L565.747623 792.837176z" fill="#ffffff"></path>' + 
+                        '</svg>' + 
+                    '</button>' + 
+                '</div>' + 
+            '</div>' + 
+        '</div>' + 
+
+        '<div id="comment-list">' + 
+        '</div>';
+    }
+
+
+    function loadJS() {
+        var thread = new Thread('comment-list');
+        thread.load({ident: 'ghost-5971becb4ab6c014a0b1f7c6'}, function(err, thread) {
+            if(err) {
+                return;
+            }
+
+            var size = thread.render();
+            thread.changeSize(size);
+        });
+    }
+
+
+    //加载css
+    loadCSS('/css/gfw-disqus.css');
+
+    //加载html
+    loadHTML();
+
+    //加载js
+    loadJS();
+
+
 })(window);

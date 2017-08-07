@@ -7,280 +7,46 @@
 
   <title> <%= title %> </title>
   <style type="text/css">
-          html
-          {
-           height:100%;
-           margin:0;
-          }
-          body
-          {
-              height:100%;
-              margin:0;
-              /*background: red;*/
-          }
+		html {
+			height:100%;
+			margin:0;
+		}
+		body {
+			height:100%;
+			margin:0;
+		}
       </style>
 </head>
 <body>
-	<div id="container" style="width: 100%; height: 100%;"></div>
+	<div id="container">
+<!-- 		<div class="comment-box">
+		    <div class="comment-avatar avatar">
+		        <img class="comment-avatar-image" src="./images/noavatar92.png">
+		    </div>
+		    <div class="comment-form">
+		    	<div class="comment-form-wrapper">
+		        	<textarea class="comment-form-textarea" placeholder="加入讨论……"></textarea>
+		        </div>
 
+		        <div class="comment-login">
+		            <input class="comment-form-input comment-form-name" type="text" placeholder="名字（必填）" autocomplete="name">
+		            <input class="comment-form-input comment-form-email" type="email" placeholder="邮箱（必填）" autocomplete="email">
+		            <input class="comment-form-input comment-form-url" type="url" placeholder="网址（可选）" autocomplete="url">
+		        </div>
 
+		        <div class="comment-actions-form">
+		    	    <button class="comment-form-submit">
+		    	        <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200">
+		    	            <path d="M565.747623 792.837176l260.819261 112.921839 126.910435-845.424882L66.087673 581.973678l232.843092 109.933785 562.612725-511.653099-451.697589 563.616588-5.996574 239.832274L565.747623 792.837176z" fill="#ffffff"></path>
+		    	        </svg>
+		    	    </button>
+		        </div>
+		    </div>
+		</div>
+
+		<div id="comment-list">
+		</div> -->
+	</div>
 	<script type="text/javascript" src="/gfw-disqus.js"></script>
-
-	<script type="text/javascript">
-		// var stage = acgraph.create('container');
-
-
-
-		// function formatTime(iosTime) {
-
-		//     var templates = {
-		//         prefix: "",
-		//         suffix: "前",
-		//         seconds: "几秒",
-		//         minute: "1分钟",
-		//         minutes: "%d分钟",
-		//         hour: "1小时",
-		//         hours: "%d小时",
-		//         day: "1天",
-		//         days: "%d天",
-		//         month: "1个月",
-		//         months: "%d个月",
-		//         year: "1年",
-		//         years: "%d年"
-		//     };
-		//     var template = function (t, n) {
-		//         return templates[t] && templates[t].replace(/%d/i, Math.abs(Math.round(n)));
-		//     };
-
-		//     var timer = function (time) {
-		//         if (!time) return;
-		//         time = time.replace(/\.\d+/, ""); // remove milliseconds
-		//         time = time.replace(/-/, "/").replace(/-/, "/");
-		//         time = time.replace(/T/, " ").replace(/Z/, " UTC");
-		//         time = time.replace(/([\+\-]\d\d)\:?(\d\d)/, " $1$2"); // -04:00 -> -0400
-		//         time = new Date(time * 1000 || time);
-
-		//         var now = new Date();
-		//         var seconds = ((now.getTime() - time) * .001) >> 0;
-		//         var minutes = seconds / 60;
-		//         var hours = minutes / 60;
-		//         var days = hours / 24;
-		//         var years = days / 365;
-
-		//         return templates.prefix + (
-		//             seconds < 45 && template('seconds', seconds) || seconds < 90 && template('minute', 1) || minutes < 45 && template('minutes', minutes) || minutes < 90 && template('hour', 1) || hours < 24 && template('hours', hours) || hours < 42 && template('day', 1) || days < 30 && template('days', days) || days < 45 && template('month', 1) || days < 365 && template('months', days / 30) || years < 1.5 && template('year', 1) || template('years', years)) + templates.suffix;
-		//     };
-
-
-		//     return timer(iosTime);
-		// }
-
-		// /*
-		//  * 帖子，对应disqus内部Thread
-		//  */
-		// var Thread = function() {
-		// 	this.id = '';
-		// 	this.isClosed = false;
-		// 	this.slug = '';
-		// 	this.likes = 0;
-		// 	this.postTotal = 0;
-		// 	this.posts = [];
-		// 	this.cursor = {};
-		// };
-
-
-
-		// /*
-		//  * 评论内容，对应disqus内部Post
-		//  */
-		// var Post = function(parent) {
-		// 	//属性
-		// 	this.data = {
-		// 		id : '',
-
-		// 		dislikes : 0,
-		// 		likes : 0,
-		// 		media : [],
-		// 		message : '',
-		// 		createdAt : '2017-01-01T00:00:00',
-
-		// 		author: {
-		// 			name : '',
-		// 			url : '',
-		// 			avatar : '',
-		// 			isAnonymous : false,					
-		// 		},
-				
-		// 		parentIndex : -1
-		// 	};
-
-		// 	//节点
-		// 	this.parentElement = parent;
-		// 	this.element = null;
-		// 	this.childElements = {};
-
-		// 	//属性
-		// 	this.props = {
-		// 		minWidth: 300,
-		// 		width: 0
-		// 	};
-		// };
-
-
-		// //初始化
-		// Post.prototype.init = function(w) {
-		// 	var x = 0, y = 0, left = 0,
-		// 		author = this.data.author;
-
-		// 	this.element = acgraph.layer().parent(this.parentElement);
-
-		// 	//头像
-		// 	this.childElements.avatar = acgraph.image(author.avatar, x, y, 48, 48);
-		// 	this.childElements.avatar.parent(this.element);
-
-
-		// 	left = 48 + 10; //空隙
-		// 	x += left;
-
-
-		// 	//名字
-		// 	var boldfontStyle = {
-		// 		fontSize: '13px',
-		// 		fontWeight: '700',
-		// 		fontFamily: '"Helvetica Neue",arial,sans-serif',
-		// 		color: '#656c7a'
-		// 	};
-		// 	var smallFontStyle = {
-		// 		fontSize: '12px',
-		// 		fontWeight: 'normal',
-		// 		fontFamily: '"Helvetica Neue",arial,sans-serif',
-		// 		color: '#656c7a'
-		// 	};
-		// 	var bigFontStyle = {
-		// 		fontSize: '14px',
-		// 		fontFamily : '"Helvetica Neue", Helvetica, Arial, "Microsoft YaHei", sans-serif',
-		// 		color: '#2a2e2e',
-		// 		textWrap: 'byLetter',
-		// 		letterSpacing: '0.435px'
-		// 	};
-
-		// 	this.childElements.name = acgraph.text(x, y, author.name, boldfontStyle);
-
-		// 	if(author.url) {
-		// 		this.childElements.name.color('rgb(46, 169, 223)');
-		// 		this.childElements.name.cursor('pointer');
-		// 		this.childElements.name.listen("click", function (e) {
-		// 			window.open(author.url);
-		// 		});
-		// 	}
-
-		// 	this.childElements.name.parent(this.element);
-
-
-		// 	x += this.childElements.name.getWidth();
-
-
-		// 	//回复引用标记
-		// 	if(this.data.parentIndex != -1) {
-
-		// 	}
-
-
-		// 	//标记分隔符
-		// 	x += 5;
-		// 	this.childElements.bullet = acgraph.text(x, y, '•', boldfontStyle);
-		// 	this.childElements.bullet.parent(this.element);
-		// 	x += 5;
-
-		// 	x += this.childElements.bullet.getWidth();
-
-
-		// 	//日期
-		// 	var time = formatTime(this.data.createdAt);
-		// 	this.childElements.timeAgo = acgraph.text(x, y, time, smallFontStyle);
-		// 	this.childElements.timeAgo.parent(this.element);
-
-
-		// 	//评论内容
-		// 	x = left;
-		// 	y = this.childElements.name.getHeight() + 10;
-
-		// 	this.childElements.message = acgraph.text(x, y);
-		// 	this.childElements.message.style(bigFontStyle);
-		// 	this.childElements.message.width(w);
-		// 	this.childElements.message.htmlText(this.data.message);
-		// 	this.childElements.message.parent(this.element);
-
-
-		// 	//回复
-		// 	x = left;
-		// 	y += this.childElements.message.getHeight() + 5;
-
-		// 	this.childElements.reply = acgraph.text(x, y, '回复', boldfontStyle);
-		// 	this.childElements.reply.parent(this.element);
-		// };
-
-
-		// //添加回复
-		// Post.prototype.addChild = function() {
-
-		// };
-
-
-		// //渲染评论内容
-		// Post.prototype.render = function(){
-			
-
-		// };
-
-
-		// //设置宽度
-		// Post.prototype.setWidth = function(w) {
-		// 	if(w > this.minWidth)
-		// 		this.props.width = w;
-		// 	else
-		// 		this.props.width = this.minWidth;
-		// };
-
-
-
-
-		// var post = new Post(stage);
-
-		// post.data.id = '3429623509';
-		// post.data.dislikes = 0;
-		// post.data.likes = 0;
-		// post.data.message = '刚开始的时候我也是一样迷惘，后来在IE6用看的时候，发现top这个div那个高度虽然表面数值好像是12px，但是实际数值好像是18px（括号后面的数值），后来我再在网上找资料，发现了原来在IE6下div有个默认高度，当定义的div高度小于18时候，它会自动给你加到18px，所以就会发现上面图片那种有空白的情况（图片没有这么长，当然下面有空白）。其实下面那个div也是有问题的，只不过下面空白看不到而已。';
-		// post.data.createdAt = '2017-07-22T04:31:21';
-
-
-		// post.data.author.name = 'W_Z_C';
-		// post.data.author.url = 'http://wangzhechao.com';
-		// post.data.author.avatar = 'https://c.disquscdn.com/uploads/users/25975/2692/avatar92.jpg?1501757836';
-		// post.data.author.isAnonymous = false;
-
-
-		// post.init(800);
-		// post.render();
-
-
-		// textStyle = {
-		// 	fontFamily: "Georgia", 
-		// 	fontSize: "15px", 
-		// 	color: "green",
-		// 	width: stage.getBounds().getWidth()
-		// };
-
-		// text2 = stage.text(0, 50, "刚开始的时候我也是一样迷惘，后来在IE6用看的时候，发现top这个div那个高度虽然表面数值好像是12px，但是实际数值好像是18px（括号后面的数值），后来我再在网上找资料，发现了原来在IE6下div有个默认高度，当定义的div高度小于18时候，它会自动给你加到18px，所以就会发现上面图片那种有空白的情况（图片没有这么长，当然下面有空白）。其实下面那个div也是有问题的，只不过下面空白看不到而已。", textStyle);
-		// text2.textWrap("byLetter");
-
-
-		// stage.listen("stageresize", function(){
-		// 	text2.width(stage.getBounds().getWidth());
-		// 	console.log(text2.getHeight());
-		// });
-		
-		
-	</script>
 </body>
 </html>
