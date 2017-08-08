@@ -36,7 +36,7 @@ module.exports = {
 		output_type: 'json',
 
 
-		auto_approve: false,
+		auto_approve: true,
 
 		resources: {
 			'threads_details': 'threads/details',

@@ -97,13 +97,13 @@ module.exports = {
 				    json: true // Automatically stringifies the body to JSON
 				}).then(function(resp) {
 
-					if(response.code != 0) {
+					if(resp.code != 0) {
 						console.log('授权失败！请在disqus后台设置管理员权限', resp);
 					}
 
 					return Promise.resolve({
 						success: true,
-						post: common.formatPost(parsedBody.response)
+						data: common.formatPost(parsedBody.response)
 					});
 				});
 

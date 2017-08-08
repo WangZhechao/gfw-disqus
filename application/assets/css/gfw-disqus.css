@@ -28,6 +28,19 @@
 	min-width: 250px;
 }
 
+.error-info-tip {
+    float: left;
+    margin: 10px 5px;
+    color: red;
+    font-size: small;
+    font-weight: bold;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 210px;
+}
+
 .comment-actions-form .comment-form-submit {
 	white-space: nowrap;
 	border-radius: 4px;
@@ -42,6 +55,7 @@
 	float: right;
 	margin: 5px 5px 0px 0px;
 }
+
 .icon {
     display: inline-block;
     vertical-align: middle;
@@ -78,6 +92,7 @@
     color:#2a2e2e;
     cursor:text;
     resize:none;
+    font-family: Arial;
 }
 .comment-form-textarea:focus {
     border:2px solid #c2c6cc
@@ -92,7 +107,7 @@
     /*margin:-40px -5px 40px;*/
     /*overflow:hidden;*/
     -ms-flex-wrap:wrap;
-    flex-wrap:wrap
+    flex-wrap:wrap;
 }
 .comment-form-input {
     background-color:#fff;
@@ -107,19 +122,20 @@
     line-height:32px;
     -webkit-box-flex:1;
     -ms-flex:auto;
-    flex:auto
+    flex:auto;
+    font-family: Arial;
 }
 .comment-form-input::-webkit-input-placeholder {
-    color:#7f919e
+    color:#7f919e;
 }
 .comment-form-input::-moz-placeholder {
-    color:#7f919e
+    color:#7f919e;
 }
 .comment-form-input:focus {
-    border:2px solid #c2c6cc
+    border:2px solid #c2c6cc;
 }
 .comment-form-input[disabled] {
-    color:#656c7a
+    color:#656c7a;
 }
 
 /*.comment-avatar {

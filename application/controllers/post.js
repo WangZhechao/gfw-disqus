@@ -61,7 +61,7 @@ module.exports = {
 
 	    		thread.cursor = res.cursor || {more: false};
 
-				return Promise.resolve({success: true, thread: thread});
+				return Promise.resolve({success: true, data: thread});
 	    	});
 	    }).catch(function (err) {
 	    	return errors.disqusRequestError(err);
