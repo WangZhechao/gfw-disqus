@@ -93,7 +93,7 @@
     var UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3;
 
 
-    var _dom = document.getElementById('container');
+    var _dom = document.getElementById('disqus_thread');
 
     /*
      * 楼，对应disqus内部Thread
@@ -117,6 +117,7 @@
     	this.padding = [80, 10, 20, 0]; //上右下左
     	this.elementId = elementId;
     	this.stage = acgraph.create(elementId);
+        this.resizeElements = [];
         this.width = 0;
         this.currentReply = null;
         
@@ -133,7 +134,7 @@
     Thread.prototype.load = function(opts, cb) {
 
     	var self = this,
-    		url = '/listPosts?' 
+    		url = disqus_config.url + '/listPosts?' 
     				+ (!!opts.ident ? ('ident=' + opts.ident) : '')
     				+ (!!opts.link ? ('&link=' + opts.link) : '')
     				+ (!!this.cursor.hasNext ? ('&cursor=' + this.cursor.next) : '');
@@ -210,7 +211,7 @@
 
     Thread.prototype.renderPost = function(px, py, post) {
     	var self = this,
-    		width = self.stage.width() - self.padding[LEFT] - self.padding[RIGHT],
+    		width = self.stage.width() - self.padding[LEFT] - self.padding[RIGHT] - 60,
     		author = post.author,
     		left = AVATAR_SIZE + SPACE_SIZE,
     		boldfontStyle = {
@@ -235,9 +236,11 @@
     		x = 0, y = 0;
 
     	var layer = acgraph.layer().setPosition(px, py).parent(self.stage);
+        //0
     	var avatar = acgraph.image(author.avatar, x, y, AVATAR_SIZE, AVATAR_SIZE).parent(layer);
 
     	x += left;
+        //1
     	var name = acgraph.text(x, y, author.name, boldfontStyle).parent(layer);
     	if(author.url) {
     		name.color('rgb(46, 169, 223)');
@@ -251,7 +254,7 @@
 
     	//回复引用标记
     	if(post.parent) {
-    		var replyIcon = acgraph.image('/images/reply.png', x, y, 15, 15).parent(layer);
+    		var replyIcon = acgraph.image(disqus_config.url + '/images/reply.png', x, y, 15, 15).parent(layer);
 
     		x += 17;
     		var parentName = acgraph.text(x, y, self.postMap[post.parent].author.name, smallFontStyle).parent(layer);
@@ -277,6 +280,7 @@
     	message.style(bigFontStyle);
     	message.width(width);
     	message.htmlText(post.message);
+        self.resizeElements.push(message);
 
 
     	x = left;
@@ -287,9 +291,35 @@
     };
 
 
+    Thread.prototype.drawThreadInfo = function(x, y) {
+        var self = this;
+        var layer = acgraph.layer().setPosition(0, y).parent(self.stage);
+
+        var boldfontStyle = {
+            fontSize: '17px',
+            fontWeight: 'bold',
+            fontFamily: '"Helvetica Neue",arial,"Microsoft YaHei", sans-serif',
+            color: '#656c7a',
+            letterSpacing: '0.5px'
+        }
+        var commentCount = acgraph.text(5, 0, self.postTotal + ' 条评论', boldfontStyle).parent(layer);
+        var commentDisqus = acgraph.text(self.stage.width() - 135, 0, 'Disqus 讨论区', boldfontStyle).parent(layer);
+       
+        var linePath = acgraph.path().parent(layer);
+        linePath.moveTo(0, 25);
+        linePath.lineTo(self.stage.width() - 10, 25);
+        linePath.stroke({color: '#e7e9ee'}, 2);
+
+        var lineHot = acgraph.path().parent(layer);
+        lineHot.moveTo(0, 25);
+        lineHot.lineTo(90, 25);
+        lineHot.stroke({color: "#2196F3"}, 3);
+    }
+
+
     //渲染信息
     Thread.prototype.render = function() {
-    	var i, len, post, x, y, self = this,
+    	var i, len, post, x, y, left, self = this,
     		sortFlag = self.flagArray.sort().reverse();
 
 
@@ -302,27 +332,10 @@
 
     	y = self.padding[UP]; //上
     	self.stage.removeChildren();
+        self.resizeElements = [];
 
         //绘制信息概览
-        var linePath = acgraph.path().parent(self.stage);
-        linePath.moveTo(0, y);
-        linePath.lineTo(self.stage.width(), y);
-        linePath.stroke({color: '#e7e9ee'}, 2);
-
-        var lineHot = acgraph.path().parent(self.stage);
-        lineHot.moveTo(0, y);
-        lineHot.lineTo(90, y);
-        lineHot.stroke({color: "#2196F3"}, 3);
-
-        var boldfontStyle = {
-            fontSize: '17px',
-            fontWeight: 'bold',
-            fontFamily: '"Helvetica Neue",arial,"Microsoft YaHei", sans-serif',
-            color: '#656c7a',
-            letterSpacing: '0.5px'
-        }
-        var commentCount = acgraph.text(5, y - 25, self.postTotal + ' 条评论', boldfontStyle).parent(self.stage);
-        var commentDisqus = acgraph.text(self.stage.width() - 135, y - 25, 'Disqus 讨论区', boldfontStyle).parent(self.stage);
+        self.drawThreadInfo(x, 50);
 
 
         y += 10;
@@ -330,7 +343,11 @@
     		post = self.postMap[self.flagMap[sortFlag[i]]];
 
     		//左 + 
-    		x = self.padding[LEFT] + ((post._sortFlag || '').split('.').length - 1) * AVATAR_SIZE;
+            left = ((post._sortFlag || '').split('.').length - 1);
+            if(left > 3)
+                left = 3;
+
+    		x = self.padding[LEFT] + left * AVATAR_SIZE;
 
     		y += self.renderPost(x, y, post) + 10;
     	}
@@ -339,19 +356,18 @@
 
         return {
             width: (self.stage.width() - self.padding[LEFT] - self.padding[RIGHT]),
-            height: (y + self.padding[DOWN])
+            height: (100 + y + self.padding[DOWN])
         };
     };
 
 
-    Thread.prototype.changeSize = function(size) {
-        this.width = size.width || 0;
+    Thread.prototype.changeSize = function() {
+        var self = this,
+            size = self.render();
 
-        if(size.width <= 0 || size.height <= 0) 
-            return;
 
         //设定评论列表高度
-        var commentList = document.getElementById(this.elementId);
+        var commentList = document.getElementById(self.elementId);
         if(commentList) {
             commentList.style.height = size.height + 'px';
           //  commentList.style.width = size.width + 'px';
@@ -466,8 +482,8 @@
             return;
         }
 
-
-        var message = item.querySelector('.comment-form-textarea').value;
+        var elTextarea = item.querySelector('.comment-form-textarea');
+        var message = elTextarea.value;
         if(message.trim() === '') {
             errorTip('评论内容不可为空。');
             return;
@@ -493,7 +509,7 @@
         }
 
         reqwest({
-            url: '/comment',
+            url: disqus_config.url + '/comment',
             method: 'post',
             data: postData,
             success: function(resp) {
@@ -507,6 +523,9 @@
 
                 var size = self.render();
                 self.changeSize(size);
+
+                errorTip();
+                elTextarea.value = '';
             },
 
             error: function(err) {
@@ -522,7 +541,7 @@
     }
 
 
-    function loadJS() {
+    function Run() {
         var thread = new Thread('comment-list');
         thread.load({ident: 'ghost-5971becb4ab6c014a0b1f7c6'}, function(err, thread) {
             if(err) {
@@ -545,13 +564,13 @@
 
 
     //加载css
-    loadCSS('/css/gfw-disqus.css');
+    loadCSS(disqus_config.url + '/css/gfw-disqus.css');
 
     //加载html
     loadHTML();
 
-    //加载js
-    loadJS();
+
+    Run();
 
 
 })(window);

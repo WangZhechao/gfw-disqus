@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="utf-8">
-  <script src="https://cdn.anychart.com/js/latest/graphics.min.js"></script>
+  <script type="text/javascript" src="/graphics.min.js"></script>
   <script type="text/javascript" src="/reqwest.js"></script>
 
   <title> <%= title %> </title>
@@ -18,7 +18,7 @@
       </style>
 </head>
 <body>
-	<div id="container">
+	<div id="disqus_thread">
 <!-- 		<div class="comment-box">
 		    <div class="comment-avatar avatar">
 		        <img class="comment-avatar-image" src="./images/noavatar92.png">
@@ -47,6 +47,13 @@
 		<div id="comment-list">
 		</div> -->
 	</div>
-	<script type="text/javascript" src="/gfw-disqus.js"></script>
+	<script type="text/javascript">
+	var disqus_config = function () {
+	    this.page.url = '{{url absolute="true"}}';
+	    this.page.identifier = 'ghost-{{id}}';
+	};		
+	</script>
+
+	<script type="text/javascript" src="/embed.js"></script>
 </body>
 </html>
