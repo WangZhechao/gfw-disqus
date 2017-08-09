@@ -95,6 +95,121 @@
 
     var _dom = document.getElementById('disqus_thread');
 
+
+    /*
+     * 头像
+     */
+    function Avatar(elementId) {
+        this.elementId = elementId;
+        this.stage = acgraph.create(elementId);
+
+        this.authorAvatarUrl = disqus_config.url + '/images/noavatar92.png';
+        this.authorAvatar = null;
+        this.currentReply = null;
+        this.width = 0;
+    }
+
+
+    Avatar.prototype.getAvatar = function() {
+        return this.currentReply;
+    };
+
+
+    Avatar.prototype.setAvatar = function(id) {
+        this.currentReply = id;
+        this.changeSize();
+    };
+
+
+    Avatar.prototype.setAvatarImg = function(url) {
+        var self = this;
+
+        if(self.authorAvatar && url) {
+            self.authorAvatarUrl = url;
+        } else {
+            self.authorAvatarUrl = disqus_config.url + '/images/noavatar92.png';
+        }
+
+        self.authorAvatar.src(self.authorAvatarUrl);
+    };
+
+
+    Avatar.prototype.changeSize = function(width) {
+        var self = this,
+            avatarSize = self.render();
+
+        if(!width) {
+            width = self.width;
+        } else {
+            self.width = width;
+        }
+
+        var avatarList = document.getElementById(self.elementId);
+        if(avatarList) {
+            avatarList.style.left = ((width - avatarSize.width) / 2) + 'px';
+            avatarList.style.width = avatarSize.width + 'px';
+            avatarList.style.height = avatarSize.height + 'px';
+        }
+    };
+
+
+    Avatar.prototype.render = function() {
+        var self = this, x, y;
+
+        self.stage.removeAllListeners();
+        self.stage.removeChildren();
+
+        var layer = acgraph.layer().setPosition(0, 0).parent(self.stage);
+
+        x = 0; y = 0;
+        self.authorAvatar = acgraph.image(self.authorAvatarUrl, x, y, AVATAR_SIZE, AVATAR_SIZE).parent(layer);
+        self.authorAvatar.clip(acgraph.ellipse(x+24, y+24, 24, 24));
+
+        if(self.currentReply) {
+            x += AVATAR_SIZE + 10;
+            y = 0;
+            var replyIcon = acgraph.image(disqus_config.url + '/images/reply.png', x, y, 48, 48).parent(layer);
+
+            x += AVATAR_SIZE + 10;
+            y = 0;
+
+            var imgPath = disqus_config.url + '/images/noavatar92.png';
+            if(window.gfwdisqus && window.gfwdisqus.thread) {
+                imgPath = window.gfwdisqus.thread.getAvatarPath(self.currentReply);
+            }
+
+            var close = acgraph.path().moveTo(x, 0).lineTo(x+AVATAR_SIZE, AVATAR_SIZE).moveTo(x, AVATAR_SIZE).lineTo(x+AVATAR_SIZE, 0).parent(layer);
+            close.stroke({color: "#FF0000"}, 3);
+            close.zIndex(999999);
+            close.clip(acgraph.ellipse(x+24, y+24, 24, 24));
+            close.visible(false);
+            close.listen('click', function() {
+                self.setAvatar(null);
+            });
+
+
+            var avatar1 = acgraph.image(imgPath, x, y, AVATAR_SIZE, AVATAR_SIZE).parent(layer);
+            avatar1.clip(acgraph.ellipse(x+24, y+24, 24, 24));
+            avatar1.cursor('pointer');
+            avatar1.listen('click', function() {
+                self.setAvatar(null);
+            });
+
+            avatar1.listen('mouseover', function() {
+                close.visible(true);
+            });
+
+            avatar1.listen('mouseout', function() {
+                close.visible(false);
+            });
+        }
+
+        return {
+            width: x + AVATAR_SIZE,
+            height: AVATAR_SIZE
+        };
+    };
+
     /*
      * 楼，对应disqus内部Thread
      */
@@ -209,6 +324,23 @@
     };
 
 
+    function openURL() {
+        if(this.author && this.author.url)
+            window.open(this.author.url);
+    }
+
+    function replyContent() {
+        if(window.gfwdisqus && window.gfwdisqus.avatar) {
+            var avatar = window.gfwdisqus.avatar;
+
+            if(avatar.getAvatar() === this.id) {
+                avatar.setAvatar(null);
+            } else {
+                avatar.setAvatar(this.id);
+            }
+        }
+    }
+
     Thread.prototype.renderPost = function(px, py, post) {
     	var self = this,
     		width = self.stage.width() - self.padding[LEFT] - self.padding[RIGHT] - 60,
@@ -245,9 +377,7 @@
     	if(author.url) {
     		name.color('rgb(46, 169, 223)');
     		name.cursor('pointer');
-    		name.listen("click", function (e) {
-    			window.open(author.url);
-    		});
+    		name.listen("click", openURL, false, post);
     	}
 
     	x += name.getWidth();
@@ -286,6 +416,8 @@
     	x = left;
     	y += message.getHeight() + 5;
     	var reply = acgraph.text(x, y, '回复', boldfontStyle).parent(layer);
+        reply.cursor('pointer');
+        reply.listen("click", replyContent, false, post);
 
     	return layer.getHeight();
     };
@@ -314,7 +446,7 @@
         lineHot.moveTo(0, 25);
         lineHot.lineTo(90, 25);
         lineHot.stroke({color: "#2196F3"}, 3);
-    }
+    };
 
 
     //渲染信息
@@ -356,15 +488,18 @@
 
         return {
             width: (self.stage.width() - self.padding[LEFT] - self.padding[RIGHT]),
-            height: (100 + y + self.padding[DOWN])
+            height: (150 + y + self.padding[DOWN])
         };
     };
 
 
-    Thread.prototype.changeSize = function() {
+    Thread.prototype.changeSize = function(s) {
         var self = this,
             size = self.render();
 
+        if(window.gfwdisqus && window.gfwdisqus.avatar) {
+            window.gfwdisqus.avatar.changeSize(s.width);
+        }
 
         //设定评论列表高度
         var commentList = document.getElementById(self.elementId);
@@ -386,7 +521,20 @@
         if(errorTip) {
             errorTip.style.width = (size.width - 150) + 'px';
         }
-    }
+    };
+
+
+    Thread.prototype.getAvatarPath = function(id) {
+        var self = this;
+
+        var imgPath = disqus_config.url + '/images/noavatar92.png';
+        if(self.postMap && self.postMap[id] && self.postMap[id].author) {
+            imgPath = self.postMap[id].author.avatar;
+        }
+
+        return imgPath;
+    };
+
 
     function errorTip(msg) {
         var errTip = _dom.querySelector('.error-info-tip');
@@ -414,10 +562,9 @@
             return;
         }
 
-        _dom.innerHTML = '<div class="comment-box">' + 
-            // '<div class="comment-avatar avatar">' + 
-            //     '<img class="comment-avatar-image" src="./images/noavatar92.png">' + 
-            // '</div>' + 
+        _dom.innerHTML = '<div id="comment-avatar"></div>' +
+        '<div class="comment-box">' + 
+
             '<div class="comment-form">' + 
                 '<div class="comment-form-wrapper">' + 
                     '<textarea class="comment-form-textarea" placeholder="加入讨论……"></textarea>' + 
@@ -441,13 +588,35 @@
             '</div>' + 
         '</div>' + 
 
-        '<div id="comment-list">' + 
-        '</div>';
+        '<div id="comment-list"></div>';
     }
 
 
     function input() {
         errorTip();
+    }
+
+    function verifyEmail(e) {
+        var box  = e.currentTarget.closest('.comment-box');
+        var email = box.querySelector('.comment-form-email');
+
+        if (/^([\w-_]+(?:\.[\w-_]+)*)@((?:[a-z0-9]+(?:-[a-zA-Z0-9]+)*)+\.[a-z]{2,6})$/i.test(email.value)) {
+            
+            reqwest({
+                url: disqus_config.url + '/gravatar?email=' + email.value,
+                method: 'get',
+                success: function(resp) {
+                    if(!(resp.success && resp.data)) {
+                        errorTip('您所填写的邮箱地址有误。');
+                        return;
+                    }
+
+                    if(window.gfwdisqus && window.gfwdisqus.avatar) {
+                        window.gfwdisqus.avatar.setAvatarImg(resp.data.gravatar);
+                    }
+                }
+            });
+        }
     }
 
 
@@ -490,7 +659,11 @@
         }
 
 
-        var parentId = self.currentReply;
+        var parentId = '';
+        if(window.gfwdisqus && window.gfwdisqus.avatar) {
+            parentId = window.gfwdisqus.avatar.getAvatar() || '';
+        }
+        
         var media = [];
 
         // POST 操作
@@ -542,7 +715,13 @@
 
 
     function Run() {
+        var avatar = new Avatar('comment-avatar');
         var thread = new Thread('comment-list');
+        window.gfwdisqus = {
+            avatar: avatar,
+            thread: thread
+        };
+
         thread.load({ident: 'ghost-5971becb4ab6c014a0b1f7c6'}, function(err, thread) {
             if(err) {
                 return;
@@ -560,6 +739,7 @@
         _dom.querySelector('.comment-form-email').addEventListener('input', input, false);
         _dom.querySelector('.comment-form-url').addEventListener('input', input, false);
         _dom.querySelector('.comment-form-submit').addEventListener('click', submitPost.bind(thread), false);
+        _dom.querySelector('.comment-form-email').addEventListener('blur', verifyEmail, false);
     }
 
 

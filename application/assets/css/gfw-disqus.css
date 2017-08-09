@@ -5,18 +5,29 @@
 	/*background: yellow;*/
 }
 
-.comment-box {
-	/*background: red;*/
-	position: absolute;
-	z-index: 9999;
-	left: 10px;
-	top: 20px;
+#comment-avatar {
+    /*background: blue;*/
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+    position: absolute;
+    height: 48px;
+    z-index: 99999;
+    width: 100%;
 }
 
 #comment-list {
     /*background: blue;*/
-    padding: 200px 10px 0px 10px;
+    padding: 220px 10px 0px 10px;
     height: 0px;
+}
+
+.comment-box {
+	/*background: red;*/
+	position: absolute;
+	z-index: 9999;
+	left: 15px;
+	top: 35px;
 }
 
 .comment-form :focus {

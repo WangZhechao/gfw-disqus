@@ -32,7 +32,7 @@ module.exports = {
 			var defAvatar = config.server.url + '/images/noavatar92.png';
 			var avatar = config.gravatar_cdn + '/' + utils.md5(email) + '?d=' + defAvatar;
 
-			return Promise.resolve({success: true, gravatar: avatar});
+			return Promise.resolve({success: true, data: {gravatar: avatar}});
 
 		}).catch(function(err) {
 			return errors.disqusRequestError(err);

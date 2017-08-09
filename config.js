@@ -46,8 +46,7 @@ module.exports = {
 		}
 	},
 
-	gravatar_cdn: '//cn.gravatar.com/avatar',
-	emoji_path: 'https://assets-cdn.github.com/images/icons/emoji/unicode',
+	gravatar_cdn: '//cn.gravatar.com/avatar'
 
 	logging: true
 };
