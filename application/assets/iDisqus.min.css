@@ -6,9 +6,7 @@
     padding:0;
     box-sizing:border-box
 }
-/*.comment#disqus_thread {
-    display:none
-}*/
+
 .comment a {
     text-decoration:none
 }
@@ -83,6 +81,15 @@
     -webkit-animation:disqus-loader-spinner-animation .7s infinite linear;
     animation:disqus-loader-spinner-animation .7s infinite linear
 }
+
+
+
+
+
+
+
+
+/*
 .comment-box {
     margin:20px 0
 }
@@ -368,7 +375,9 @@
     height:36px;
     filter:alpha(opacity=100);
     visibility:visible!important
-}
+}*/
+
+
 .comment-form-wrapper.editing .comment-actions-form {
     transition:all .3s .5s;
     margin:87px -2px -2px
@@ -580,6 +589,7 @@
     width:48px;
     height:48px
 }
+
 @-webkit-keyframes disqus-loader-spinner-animation {
     0% {
         -webkit-transform:rotate(0);
@@ -631,7 +641,7 @@
     vertical-align:top;
     margin:0 .1em
 }
-.comment-list #comment-preview {
+/*.comment-list #comment-preview {
     opacity:.6
 }
 .comment-list .comment-item {
@@ -794,4 +804,4 @@
     .comment-form-wrapper.logged-in .comment-actions-form {
         margin:0
     }
-}
+}*/

@@ -25,7 +25,7 @@ module.exports = {
 		admin_email: 'wangzhechao@live.com',
 		admin_name: 'W_Z_C',
 		forum_id: 'wangzhechao',
-		auth_website: ['http://wangzhechao.com', 'http://127.0.0.1:2368'],
+		auth_website: ['http://wangzhechao.com', 'http://127.0.0.1:3000', 'http://127.0.0.1:2368'],
 		pub_key: 'E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F',
 		api_key: 'Nc7AR12AlsLGDJXlhBU3FAerFEriT4fcPb2RMJmdqBcqvc0n9XgfKxm9zjetd2N6',
 		api_secret: 'uJjT8rXI0zixeXAykYSS26HTsYikEZrVb0PCQuD4lZn7NQ7NL1hW2RfDGW2TSWU2',
@@ -46,7 +46,7 @@ module.exports = {
 		}
 	},
 
-	gravatar_cdn: '//cn.gravatar.com/avatar'
+	gravatar_cdn: '//cn.gravatar.com/avatar',
 
 	logging: true
 };

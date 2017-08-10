@@ -30,6 +30,7 @@ module.exports = {
 		}).then(function(address) {
 
 			var defAvatar = config.server.url + '/images/noavatar92.png';
+			//defAvatar = 'https://a.disquscdn.com/images/noavatar92.png';
 			var avatar = config.gravatar_cdn + '/' + utils.md5(email) + '?d=' + defAvatar;
 
 			return Promise.resolve({success: true, data: {gravatar: avatar}});

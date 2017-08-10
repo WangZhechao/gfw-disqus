@@ -31,7 +31,7 @@ module.exports = {
 
 		    author_name: params.name.trim(),
 		    author_email: params.email.trim(),
-		    author_url: params.url || null,
+		    author_url: params.url || null
 		};
 
 

@@ -12,7 +12,7 @@ module.exports = {
 	list: function(params) {
 
 		var page = {
-			limit: 50,
+			limit: 5,
 		    order: 'asc'
 		}
 
@@ -66,6 +66,5 @@ module.exports = {
 	    }).catch(function (err) {
 	    	return errors.disqusRequestError(err);
 	    });
-	}	
-
+	}
 };
