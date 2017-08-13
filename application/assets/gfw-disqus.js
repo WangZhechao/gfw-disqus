@@ -327,12 +327,12 @@
 
     //加载信息
     Thread.prototype.load = function(opts, cb) {
-
     	var self = this,
             opts = opts || {},
     		url = window.gfw_disqus_config.url + '/listPosts?' 
-    				+ (!!opts.identifier ? ('ident=' + opts.identifier) : '')
-    				+ (!!opts.link ? ('&link=' + opts.link) : '')
+                    + (!!opts.title ? ('title=' + opts.title) : '')
+    				+ (!!opts.identifier ? ('&ident=' + opts.identifier) : '')
+    				+ (!!opts.url ? ('&link=' + opts.url) : '')
     				+ (!!this.cursor.hasNext ? ('&cursor=' + this.cursor.next) : '');
 
     	reqwest({
@@ -562,7 +562,7 @@
             color: '#656c7a',
             letterSpacing: '0.5px'
         }
-        var commentCount = acgraph.text(5, 0, self.postTotal + ' 条评论', boldfontStyle).parent(layer);
+        var commentCount = acgraph.text(5, 0, (self.postTotal <= 0 ? '暂无评论' : self.postTotal + ' 条评论'), boldfontStyle).parent(layer);
         var commentDisqus = acgraph.text(self.stage.width() - 135, 0, 'Disqus 讨论区', boldfontStyle).parent(layer);
        
         var linePath = acgraph.path().parent(layer);

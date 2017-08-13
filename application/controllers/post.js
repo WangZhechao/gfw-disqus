@@ -31,14 +31,27 @@ module.exports = {
 		}
 
 
-		return rp({
-			uri: utils.getDisqusURL('threads_details'),
-			qs: _.assign({
-				api_key: config.disqus.api_key,
-				forum: config.disqus.forum_id
-			}, tqs),
+		return Promise.resolve(params).then(function(params) {
+			return rp({
+				uri: utils.getDisqusURL('threads_details'),
+				qs: _.assign({
+					api_key: config.disqus.api_key,
+					forum: config.disqus.forum_id
+				}, tqs),
 
-			json: true			
+				json: true			
+			}).catch(function(e) {
+				//自动创建
+				if(e.statusCode === 400 && e.error
+					&& e.error.code === 2 && e.error.response
+					&& -1 !== e.error.response.search('Unable to find thread'))
+				{
+					return C.thread.create(params);
+				}
+
+				throw e;
+			});
+
 		}).then(function (res) {
 			return Promise.resolve(_.pick(res.response, ['likes', 'isClosed', 'slug', 'id', 'posts']));
 	    }).then(function(thread) {

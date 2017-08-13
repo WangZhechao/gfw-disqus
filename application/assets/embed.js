@@ -36,7 +36,7 @@ if(isSupper) {
     loadJS(window.gfw_disqus_config.url + '/reqwest.min.js');
 
     window.onload=function(){
-       loadJS(window.gfw_disqus_config.url + '/gfw-disqus.min.js');
+       loadJS(window.gfw_disqus_config.url + '/gfw-disqus.js');
     }    
 } else {
     (function() {
