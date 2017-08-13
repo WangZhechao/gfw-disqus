@@ -9,19 +9,7 @@ var Promise = require('bluebird'),
 
 
 module.exports = {
-	browse: function() {
-		return Promise.resolve({
-			view: 'comment.ejs',
-			locals: {title: 'SHP测试主页！'}
-		});
-	},
-
-
 	create: function(params) {
-
-		//如果是管理员发送直接授权？？？
-
-		//假冒管理员怎么办？？？
 
 		var body = {
 		    api_key: config.disqus.pub_key,

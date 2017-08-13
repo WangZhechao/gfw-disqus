@@ -9,7 +9,7 @@ module.exports = {
 
 		return Promise.resolve({
 			view: 'home.ejs',
-			locals: {title: 'SHP测试主页！', pid: process.pid}
+			locals: {title: 'disqus测试主页！', pid: process.pid}
 		});
 	}
 };

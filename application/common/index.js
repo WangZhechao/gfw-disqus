@@ -19,6 +19,15 @@ function formatPost(post) {
 
 	defAvatar = config.server.url + '/images/noavatar92.png';
 
+
+	if(!obj.isAnonymous && email === config.disqus.admin_email
+		&& obj.author.name === config.disqus.admin_name) {
+		obj.author.isAdmin = true;
+	} else {
+		obj.author.isAdmin = false;
+	}
+
+
 	//头像
 	if(obj.isAnonymous) {
 		if(email)

@@ -1,6 +1,13 @@
 (function (window) {
     'use strict';
 
+    if(!console) {
+        console = {
+            log: function(txt) {
+                //=======
+            }
+        };
+    }
 
     if (!Object.keys) Object.keys = function(o) {
       if (o !== Object(o))
@@ -154,7 +161,7 @@
     if(typeof disqus_config === 'function') {
         disqus_config.bind(_pageInfo)();
     } else {
-        return console && console.log && console.log('disqus_config 有问题！');
+        return console.log('disqus_config 有问题！');
     }
 
     /*
@@ -378,7 +385,7 @@
     	for(index=0; index<count; index++) {
     		//已经存在
     		if(self.postMap[posts[index].id]) {
-    			console.log('已经存在！');
+    			(console.log('已经存在！'));
     		} else {
     			self.postMap[posts[index].id] = posts[index];
     			self.postMap[posts[index].id].children = [];
@@ -396,7 +403,7 @@
                         self.flagMap[self.postMap[posts[index].id]._sortFlag] = posts[index].id;
     					self.postMap[posts[index].parent].children.push(posts[index].id);
     				} else {
-    					console.log('父节点不存在！');
+                        (console.log('父节点不存在！'));
     				}    				
     			} else {
 
@@ -441,7 +448,7 @@
 
         self.load(_pageInfo.page, function(err, thread) {
             if(err) {
-                return (console && console.log && console.log(err));
+                return (console.log(err));
             }
 
             var size = thread.render();
@@ -490,6 +497,13 @@
     	}
 
     	x += name.getWidth();
+
+        //博主
+        if(author.isAdmin) {
+            var admin = acgraph.text(x, y-5, '博主', smallFontStyle).parent(layer);
+
+            x += admin.getWidth();
+        }
 
     	//回复引用标记
     	if(post.parent) {
@@ -779,7 +793,6 @@
                     }
 
                     if(window.gfwdisqus && window.gfwdisqus.avatar) {
-                        console.log(resp.data.gravatar);
                         window.gfwdisqus.avatar.setAvatarImg(resp.data.gravatar);
                     }
                 }
@@ -911,7 +924,7 @@
         var thread = new Thread('comment-list');
         thread.load(_pageInfo.page, function(err, thread) {
             if(err) {
-                return (console && console.log && console.log(err));
+                return (console.log(err));
             }
 
             //是否关闭评论
@@ -941,7 +954,7 @@
             }
 
 
-            console.log(thread);
+            //console.log(thread);
         });
 
 

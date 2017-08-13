@@ -12,7 +12,7 @@ module.exports = {
 	list: function(params) {
 
 		var page = {
-			limit: 5,
+			limit: 50,
 		    order: 'asc'
 		}
 

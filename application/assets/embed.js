@@ -33,10 +33,10 @@ if(isSupper) {
 
     //加载js
     loadJS(window.gfw_disqus_config.url + '/graphics.min.js');
-    loadJS(window.gfw_disqus_config.url + '/reqwest.js');
+    loadJS(window.gfw_disqus_config.url + '/reqwest.min.js');
 
     window.onload=function(){
-       loadJS(window.gfw_disqus_config.url + '/gfw-disqus.js');
+       loadJS(window.gfw_disqus_config.url + '/gfw-disqus.min.js');
     }    
 } else {
     (function() {
