@@ -55,6 +55,28 @@ module.exports = {
 		}).then(function (res) {
 			return Promise.resolve(_.pick(res.response, ['likes', 'isClosed', 'slug', 'id', 'posts']));
 	    }).then(function(thread) {
+
+	    	//可以优化，当没有评论的时候
+	    	if(thread.posts === 0) {
+	    		thread.postTotal = 0;
+	    		thread.posts = [];
+	    		thread.cursor = {
+		    		prev: null,
+		    		hasNext: false,
+		    		next: '0:0:0',
+		    		hasPrev: false,
+		    		total: null,
+		    		id: '0:0:0',
+		    		more: false
+	    		};
+
+	    		return Promise.resolve({
+	    			success: true,
+	    			data: thread
+	    		});
+	    	}
+
+
 	    	return rp({
 	    		uri: utils.getDisqusURL('threads_listPosts'),
 	    		qs: _.assign({
@@ -72,7 +94,7 @@ module.exports = {
 	    			thread.posts.push(common.formatPost(post));
 	    		});
 
-	    		thread.cursor = res.cursor || {more: false};
+	    		thread.cursor = res.cursor;
 
 				return Promise.resolve({success: true, data: thread});
 	    	});
