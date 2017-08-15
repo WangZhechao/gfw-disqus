@@ -12,16 +12,16 @@ function formatPost(post) {
 	var email, obj, defAvatar;
 
   	obj = _.pick(post, ['dislikes', 'likes', 'message', 'createdAt', 
-  		'id', 'media', 'parent', 'author.isAnonymous', 'author.name',
-  		'author.url', 'author.avatar']);
+  		'id', 'media', 'parent', 'author.isAnonymous', 
+  		'author.name', 'author.url', 'author.avatar']);
 	
 	email = _.get(post, 'author.email', null);
 
 	defAvatar = config.server.url + '/images/noavatar92.png';
 
 
-	if(!obj.isAnonymous && email === config.disqus.admin_email
-		&& obj.author.name === config.disqus.admin_name) {
+	if(!obj.isAnonymous && email === config.disqus.admin_email && 
+		obj.author.name === config.disqus.admin_name) {
 		obj.author.isAdmin = true;
 	} else {
 		obj.author.isAdmin = false;

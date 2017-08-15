@@ -1,7 +1,7 @@
 /*
  * 简单disqus api封装。
  * 
- * W_Z_C
+ * @author W_Z_C
  */
 
 
