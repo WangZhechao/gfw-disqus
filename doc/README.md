@@ -27,9 +27,9 @@ node index.js
 
 ## 3. 演示程序
 
-当前功能支持发表和展示评论（推荐有能力重写前端）
+当前功能支持发表和展示评论（推荐有能力重写前端代码）
 
-演示地址：http://disqus.wangzhechao.com
+DEMO：http://disqus.wangzhechao.com
 
 ## 4. 部署设置
 
@@ -39,7 +39,7 @@ node index.js
 
 访问API文档[页面](https://disqus.com/api/applications/)，创建应用：
 
-![Applications](./1.png)
+![Applications](https://github.com/WangZhechao/gfw-disqus/raw/master/doc/1.png)
 
 成功后会获取一组值，包括：
 
@@ -74,7 +74,7 @@ Read, Write, Manage Forums
 
 接着开启匿名评论功能(Guest Commenting)，转到[Community & Comments Configuration](https://disqus.com/admin/settings/community/)页面。
 
-![Community & Comments Configuration](./2.png)
+![Community & Comments Configuration](https://github.com/WangZhechao/gfw-disqus/raw/master/doc/2.png)
 
 ###4.2  前端设置
 
