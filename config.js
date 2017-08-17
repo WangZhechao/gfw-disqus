@@ -38,9 +38,9 @@ module.exports = {
 		pub_key: 'E8Uh5l5fHZ6gD8U3KycjAIAk46f68Zw7C6eW8WSjZvCLXebZ7p0r1yrYDrLilk2F',
 
 		/* disqus授权 */
-		api_key: 'Nc7AR12AlsLGDJXlhBU3FAerFEriT4fcPb2RMJmdqBcqvc0n9XgfKxm9zjetd2N6',
-		api_secret: 'uJjT8rXI0zixeXAykYSS26HTsYikEZrVb0PCQuD4lZn7NQ7NL1hW2RfDGW2TSWU2',
-		access_token: 'c00bf6bfa7474652ae026e3de4afce59',
+		api_key: '',
+		api_secret: '',
+		access_token: '',
 
 		api_url: 'https://disqus.com/api',
 		api_ver: '3.0',
