@@ -11,6 +11,7 @@ http://disqus.wangzhechao.com
 
 ## 2. 安装方法
 
+
 将程序安装包上传到服务器，在程序解压目录下，运行npm安装依赖：
 
 ```
@@ -25,17 +26,23 @@ node index.js
 
 如果长久运行，推荐和pm2配合使用。
 
+
 ## 3. 演示程序
+
 
 当前功能支持发表和展示评论（推荐有能力重写前端代码）
 
 DEMO：http://disqus.wangzhechao.com
 
+
 ## 4. 部署设置
+
 
 部署该程序，需要设置三个地方，分别是disqus官网设置、前端加载设置以及后端程序设置。
 
+
 ###4.1 Disqus设置
+
 
 访问API文档[页面](https://disqus.com/api/applications/)，创建应用：
 
@@ -76,7 +83,9 @@ Read, Write, Manage Forums
 
 ![Community & Comments Configuration](https://github.com/WangZhechao/gfw-disqus/raw/master/doc/2.png)
 
+
 ###4.2  前端设置
+
 
 如果是ghost博客默认主题：
 
@@ -104,7 +113,9 @@ Read, Write, Manage Forums
 
 `gfw_disqus_config`对象设置url属性，该属性的值为程序部署服务器对外访问的域名或者ip地址。
 
+
 ### 4.3 后端设置
+
 
 后端配置主要是`config.js`文件。
 
@@ -165,7 +176,9 @@ module.exports = {
 
 其中`url、admin_email、admin_name、forum_id、auth_website、api_key、api_secret、access_token`是必修项，其他暂时不用修改。
 
+
 ##5. 后端接口说明
+
 
 目前后端有两个接口：
 
